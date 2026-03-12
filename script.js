@@ -8,34 +8,23 @@ if (typeof Lenis !== 'undefined') {
 
 // --- 2. PRELOADER & GSAP ANIMATIONS ---
 document.addEventListener('DOMContentLoaded', () => {
-    
-    // The Preloader Logic
     const preloader = document.getElementById('preloader');
     
-    // Wait for window load (ensures images are ready)
-    window.addEventListener('load', () => {
-        if(preloader) {
-            // Give it a tiny delay so the gold line animation finishes
-            setTimeout(() => {
-                preloader.classList.add('hidden');
-                initPageAnimations();
-            }, 800);
-        } else {
-            initPageAnimations(); // Fallback if no preloader
-        }
-    });
+    // Fallback safe preloader removal
+    setTimeout(() => {
+        if(preloader) preloader.classList.add('hidden');
+        initPageAnimations();
+    }, 800);
 
     function initPageAnimations() {
         if (typeof gsap === 'undefined') return;
         gsap.registerPlugin(ScrollTrigger);
 
-        // Hero Text Reveal
         gsap.fromTo('.gsap-reveal', 
             { y: 60, opacity: 0 }, 
             { y: 0, opacity: 1, duration: 1.5, stagger: 0.2, ease: 'power4.out' }
         );
 
-        // Regular Fade Ins
         gsap.utils.toArray('.gsap-fade').forEach(element => {
             gsap.fromTo(element, 
                 { y: 50, opacity: 0 },
@@ -43,42 +32,31 @@ document.addEventListener('DOMContentLoaded', () => {
             );
         });
 
-        // Image Parallax Effect (The $10k touch)
         gsap.utils.toArray('.img-block img').forEach(img => {
             gsap.to(img, {
-                yPercent: 20, // Moves image down as you scroll
+                yPercent: 20,
                 ease: "none",
-                scrollTrigger: {
-                    trigger: img.parentElement,
-                    start: "top bottom", 
-                    end: "bottom top",
-                    scrub: true
-                }
+                scrollTrigger: { trigger: img.parentElement, start: "top bottom", end: "bottom top", scrub: true }
             });
         });
 
-        // Hero Parallax
         if(document.querySelector('.hero-bg')) {
-            gsap.to('.hero-bg', {
-                yPercent: 30,
-                ease: "none",
-                scrollTrigger: { trigger: '.hero', start: "top top", end: "bottom top", scrub: true }
-            });
+            gsap.to('.hero-bg', { yPercent: 30, ease: "none", scrollTrigger: { trigger: '.hero', start: "top top", end: "bottom top", scrub: true } });
         }
     }
 
-    // Hide Navbar on Scroll Down, Show on Scroll Up
+    // Navbar Hide/Show
     let lastScroll = 0;
     const navbar = document.querySelector('.navbar');
-    window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
-        if (currentScroll <= 0) navbar.classList.remove('hide');
-        else if (currentScroll > lastScroll && currentScroll > 100) navbar.classList.add('hide');
-        else navbar.classList.remove('hide');
-        lastScroll = currentScroll;
-    });
-
-    if (document.getElementById('canvasContainer')) init3D();
+    if(navbar) {
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll <= 0) navbar.classList.remove('hide');
+            else if (currentScroll > lastScroll && currentScroll > 100) navbar.classList.add('hide');
+            else navbar.classList.remove('hide');
+            lastScroll = currentScroll;
+        });
+    }
 });
 
 // --- 3. GLOBAL CART SYSTEM ---
@@ -121,133 +99,71 @@ function updateCartDisplay() {
 window.removeFromCart = function(index) { cart.splice(index, 1); localStorage.setItem('restaurantCart', JSON.stringify(cart)); updateCartDisplay(); }
 updateCartDisplay();
 
-// --- 4. REAL-TIME AR 3D VIEWER (MODEL-VIEWER) ---
+// --- 4. REAL-TIME 3D & AR VIEWER (Google Model Viewer) ---
 document.addEventListener('DOMContentLoaded', () => {
     const arViewer = document.getElementById('arViewer');
     const modal3d = document.getElementById('modal3d');
     const modalTitle = document.getElementById('modalTitle');
     const closeModal = document.getElementById('closeModal');
 
-    if(arViewer) {
+    if(arViewer && modal3d) {
         document.querySelectorAll('.card-img[data-model]').forEach(img => {
             img.addEventListener('click', () => {
                 const type = img.dataset.model;
-                
-                // Set the model source
-                arViewer.src = `models/${type}.glb`;
+                arViewer.src = `models/${type}.glb`; // Load model
                 modalTitle.innerText = type.charAt(0).toUpperCase() + type.slice(1);
-                
-                // Open Modal
                 modal3d.classList.add('open');
-                if(typeof lenis !== 'undefined') lenis.stop();
+                if(lenis) lenis.stop(); // Pause background scrolling
             });
         });
 
         closeModal.addEventListener('click', () => {
             modal3d.classList.remove('open');
-            arViewer.src = ""; // Clear memory
-            if(typeof lenis !== 'undefined') lenis.start();
+            setTimeout(() => { arViewer.src = ""; }, 400); // Clear memory after fade out
+            if(lenis) lenis.start();
         });
     }
 });
-// --- 5. CUSTOM CURSOR & MAGNETIC BUTTONS (LUXURY UPGRADE) ---
+
+// --- 5. MOBILE MENU LOGIC ---
 document.addEventListener('DOMContentLoaded', () => {
-    const cursor = document.querySelector('.cursor');
-    const follower = document.querySelector('.cursor-follower');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMobileMenu = document.getElementById('closeMobileMenu');
     
-    // Only run on desktop devices
-    if(window.matchMedia("(pointer: fine)").matches && cursor && follower) {
-        let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
-
-        // Custom Cursor movement
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX; mouseY = e.clientY;
-            // Update dot instantly
-            cursor.style.left = mouseX + 'px';
-            cursor.style.top = mouseY + 'px';
-        });
-
-        // Smooth follow for the outer ring
-        gsap.ticker.add(() => {
-            posX += (mouseX - posX) / 6;
-            posY += (mouseY - posY) / 6;
-            gsap.set(follower, { left: posX, top: posY });
-        });
-
-        // Add hover effects for links, buttons, and images
-        const hoverTargets = document.querySelectorAll('a, button, .interactive-img');
-        hoverTargets.forEach(target => {
-            target.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-            target.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-        });
-
-        // Magnetic Buttons logic
-        const magneticElements = document.querySelectorAll('.magnetic');
-        magneticElements.forEach(elem => {
-            elem.addEventListener('mousemove', (e) => {
-                const rect = elem.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                
-                // Pull the button towards the mouse slightly
-                gsap.to(elem, { x: x * 0.4, y: y * 0.4, duration: 0.3, ease: 'power2.out' });
-            });
-
-            elem.addEventListener('mouseleave', () => {
-                // Snap back to original position
-                gsap.to(elem, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.3)' });
-            });
+    if(hamburgerBtn && mobileMenu) {
+        hamburgerBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+            document.body.style.overflow = 'hidden';
         });
     }
 
-    // --- 6. AMBIENT AUDIO CONTROLLER ---
-    const audioBtn = document.getElementById('audioToggle');
-    const audioTrack = document.getElementById('ambientAudio');
-    const soundState = document.getElementById('soundState');
-
-    if(audioBtn && audioTrack) {
-        audioTrack.volume = 0.3; // Keep it subtle
-        audioBtn.addEventListener('click', () => {
-            if (audioTrack.paused) {
-                audioTrack.play();
-                audioBtn.classList.add('playing');
-                soundState.innerText = "On";
-            } else {
-                audioTrack.pause();
-                audioBtn.classList.remove('playing');
-                soundState.innerText = "Off";
-            }
+    if(closeMobileMenu && mobileMenu) {
+        closeMobileMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            document.body.style.overflow = '';
         });
     }
 });
-// --- 7. CHECKOUT PAGE LOGIC ---
+
+// --- 6. CHECKOUT PAGE LOGIC ---
 document.addEventListener('DOMContentLoaded', () => {
     const checkoutItemsList = document.getElementById('checkoutItemsList');
-    
-    // Check if we are on the checkout page
     if(checkoutItemsList) {
         let currentCart = JSON.parse(localStorage.getItem('restaurantCart')) || [];
         let subtotal = 0;
         
-        // Agar cart khali hai to wapas order page bhej do
         if(currentCart.length === 0) {
             checkoutItemsList.innerHTML = '<p style="color: #ff4444;">Your cart is empty.</p>';
-            document.querySelector('.btn-primary').style.display = 'none';
+            if(document.querySelector('.btn-primary')) document.querySelector('.btn-primary').style.display = 'none';
         } else {
-            // Render Items
             currentCart.forEach(item => {
                 subtotal += item.price;
-                checkoutItemsList.innerHTML += `
-                    <div class="checkout-item-row">
-                        <span>${item.name}</span>
-                        <span>$${item.price.toFixed(2)}</span>
-                    </div>
-                `;
+                checkoutItemsList.innerHTML += `<div class="checkout-item-row"><span>${item.name}</span><span>$${item.price.toFixed(2)}</span></div>`;
             });
 
-            // Calculate Totals
             const deliveryFee = 15.00;
-            const taxes = subtotal * 0.08; // 8% Tax
+            const taxes = subtotal * 0.08;
             const finalTotal = subtotal + deliveryFee + taxes;
 
             document.getElementById('checkoutSubtotal').innerText = subtotal.toFixed(2);
@@ -255,48 +171,32 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('checkoutFinalTotal').innerText = finalTotal.toFixed(2);
         }
 
-        // Handle Fake Order Placement
         const orderForm = document.getElementById('placeOrderForm');
         if(orderForm) {
             orderForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                // Clear cart
                 localStorage.removeItem('restaurantCart');
-                cart = []; 
-                updateCartDisplay();
-                
-                // Show Success Message
-                orderForm.innerHTML = `
-                    <div style="text-align: center; padding: 4rem 0;">
-                        <h2 style="color: var(--gold); font-size: 3rem; margin-bottom: 1rem;">Merci.</h2>
-                        <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem;">Your order has been placed successfully. The kitchen is preparing your masterpiece.</p>
-                        <a href="index.html" class="btn-primary">Return Home</a>
-                    </div>
-                `;
+                cart = []; updateCartDisplay();
+                orderForm.innerHTML = `<div style="text-align: center; padding: 4rem 0;"><h2 style="color: var(--gold); font-size: 3rem; margin-bottom: 1rem;">Merci.</h2><p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem;">Your order has been placed successfully.</p><a href="index.html" class="btn-primary">Return Home</a></div>`;
             });
         }
     }
 });
-// --- MOBILE MENU LOGIC (UPDATED) ---
-document.addEventListener('DOMContentLoaded', () => {
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const closeMobileMenu = document.getElementById('closeMobileMenu'); // Naya button
-    
-    // Menu Open karna
-    if(hamburgerBtn && mobileMenu) {
-        hamburgerBtn.addEventListener('click', () => {
-            mobileMenu.classList.add('open');
-            document.body.style.overflow = 'hidden'; // piche ka scroll band
-        });
-    }
 
-    // Menu Cut/Close karna
-    if(closeMobileMenu && mobileMenu) {
-        closeMobileMenu.addEventListener('click', () => {
-            mobileMenu.classList.remove('open');
-            document.body.style.overflow = ''; // piche ka scroll chalu
-            if(hamburgerBtn) hamburgerBtn.classList.remove('active');
+// --- 7. MAGNETIC BUTTONS (Desktop Only) ---
+document.addEventListener('DOMContentLoaded', () => {
+    if(window.matchMedia("(pointer: fine)").matches) {
+        const magneticElements = document.querySelectorAll('.magnetic');
+        magneticElements.forEach(elem => {
+            elem.addEventListener('mousemove', (e) => {
+                const rect = elem.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                if(typeof gsap !== 'undefined') gsap.to(elem, { x: x * 0.4, y: y * 0.4, duration: 0.3, ease: 'power2.out' });
+            });
+            elem.addEventListener('mouseleave', () => {
+                if(typeof gsap !== 'undefined') gsap.to(elem, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.3)' });
+            });
         });
     }
 });
