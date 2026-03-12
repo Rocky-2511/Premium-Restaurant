@@ -121,63 +121,35 @@ function updateCartDisplay() {
 window.removeFromCart = function(index) { cart.splice(index, 1); localStorage.setItem('restaurantCart', JSON.stringify(cart)); updateCartDisplay(); }
 updateCartDisplay();
 
-// --- 4. THREE.JS 3D VIEWER (.GLB Loader) ---
-function init3D() {
-    if (typeof THREE === 'undefined' || typeof THREE.GLTFLoader === 'undefined') return;
-    const canvasContainer = document.getElementById('canvasContainer');
-    let scene = new THREE.Scene();
-    let camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    let renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    canvasContainer.appendChild(renderer.domElement);
+// --- 4. REAL-TIME AR 3D VIEWER (MODEL-VIEWER) ---
+document.addEventListener('DOMContentLoaded', () => {
+    const arViewer = document.getElementById('arViewer');
+    const modal3d = document.getElementById('modal3d');
+    const modalTitle = document.getElementById('modalTitle');
+    const closeModal = document.getElementById('closeModal');
 
-    let controls;
-    if (typeof THREE.OrbitControls !== 'undefined') {
-        controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; controls.dampingFactor = 0.05; controls.autoRotate = true; controls.autoRotateSpeed = 1.0;
-    }
-
-    scene.add(new THREE.AmbientLight(0xffffff, 1.2));
-    const dirLight = new THREE.DirectionalLight(0xffffff, 2); dirLight.position.set(5, 10, 7); scene.add(dirLight);
-    camera.position.z = 8;
-    
-    const loader = new THREE.GLTFLoader();
-    let currentMesh = null;
-
-    document.querySelectorAll('.card-img[data-model]').forEach(img => {
-        img.addEventListener('click', () => {
-            const type = img.dataset.model; 
-            const modalTitle = document.getElementById('modalTitle');
-            if (currentMesh) { scene.remove(currentMesh); currentMesh = null; }
-            document.getElementById('modal3d').classList.add('open');
-            if(lenis) lenis.stop();
-            modalTitle.innerText = `Preparing ${type}...`;
-
-            loader.load(`models/${type}.glb`, 
-                function (gltf) {
-                    currentMesh = gltf.scene;
-                    const box = new THREE.Box3().setFromObject(currentMesh);
-                    const size = box.getSize(new THREE.Vector3());
-                    const scale = 5 / Math.max(size.x, size.y, size.z); 
-                    currentMesh.scale.set(scale, scale, scale);
-                    currentMesh.position.sub(new THREE.Box3().setFromObject(currentMesh).getCenter(new THREE.Vector3()));
-                    scene.add(currentMesh);
-                    modalTitle.innerText = type.charAt(0).toUpperCase() + type.slice(1);
-                },
-                undefined, function (error) { modalTitle.innerText = `Error loading models/${type}.glb`; }
-            );
+    if(arViewer) {
+        document.querySelectorAll('.card-img[data-model]').forEach(img => {
+            img.addEventListener('click', () => {
+                const type = img.dataset.model;
+                
+                // Set the model source
+                arViewer.src = `models/${type}.glb`;
+                modalTitle.innerText = type.charAt(0).toUpperCase() + type.slice(1);
+                
+                // Open Modal
+                modal3d.classList.add('open');
+                if(typeof lenis !== 'undefined') lenis.stop();
+            });
         });
-    });
 
-    document.getElementById('closeModal')?.addEventListener('click', () => {
-        document.getElementById('modal3d').classList.remove('open');
-        if(lenis) lenis.start();
-    });
-
-    function animate3D() { requestAnimationFrame(animate3D); if (controls) controls.update(); renderer.render(scene, camera); }
-    animate3D();
-}
+        closeModal.addEventListener('click', () => {
+            modal3d.classList.remove('open');
+            arViewer.src = ""; // Clear memory
+            if(typeof lenis !== 'undefined') lenis.start();
+        });
+    }
+});
 // --- 5. CUSTOM CURSOR & MAGNETIC BUTTONS (LUXURY UPGRADE) ---
 document.addEventListener('DOMContentLoaded', () => {
     const cursor = document.querySelector('.cursor');
@@ -303,5 +275,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
             });
         }
+    }
+});
+// --- MOBILE MENU LOGIC ---
+document.addEventListener('DOMContentLoaded', () => {
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    if(hamburgerBtn && mobileMenu) {
+        hamburgerBtn.addEventListener('click', () => {
+            hamburgerBtn.classList.toggle('active');
+            mobileMenu.classList.toggle('open');
+            // Prevent scrolling when menu is open
+            if(mobileMenu.classList.contains('open')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        });
     }
 });
