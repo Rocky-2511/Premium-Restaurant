@@ -277,21 +277,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
-// --- MOBILE MENU LOGIC ---
+// --- MOBILE MENU LOGIC (UPDATED) ---
 document.addEventListener('DOMContentLoaded', () => {
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const mobileMenu = document.getElementById('mobileMenu');
+    const closeMobileMenu = document.getElementById('closeMobileMenu'); // Naya button
     
+    // Menu Open karna
     if(hamburgerBtn && mobileMenu) {
         hamburgerBtn.addEventListener('click', () => {
-            hamburgerBtn.classList.toggle('active');
-            mobileMenu.classList.toggle('open');
-            // Prevent scrolling when menu is open
-            if(mobileMenu.classList.contains('open')) {
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = '';
-            }
+            mobileMenu.classList.add('open');
+            document.body.style.overflow = 'hidden'; // piche ka scroll band
+        });
+    }
+
+    // Menu Cut/Close karna
+    if(closeMobileMenu && mobileMenu) {
+        closeMobileMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            document.body.style.overflow = ''; // piche ka scroll chalu
+            if(hamburgerBtn) hamburgerBtn.classList.remove('active');
         });
     }
 });

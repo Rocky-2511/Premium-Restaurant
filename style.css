@@ -210,3 +210,19 @@ footer { text-align: center; padding: 6rem 2rem; border-top: 1px solid var(--sur
     
     .navbar { padding: 1rem 5%; justify-content: space-between; }
 }
+/* --- MOBILE MENU CLOSE BUTTON --- */
+.close-mobile-menu {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 4rem;
+    color: var(--gold);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 2001;
+    transition: transform 0.3s;
+}
+.close-mobile-menu:hover {
+    transform: scale(1.1);
+}
