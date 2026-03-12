@@ -22,7 +22,19 @@
         <button class="cart-toggle" id="cartBtn">Cart (<span id="cartCount">0</span>)</button>
     </nav>
 
-    <div class="cart-sidebar" id="cartSidebar"><div class="cart-header"><h2>Your Order</h2><button class="close-cart" id="closeCart">&times;</button></div><div class="cart-items" id="cartItems"></div><div class="cart-footer"><div class="total">Total: $<span id="cartTotal">0.00</span></div><a href="order.html" class="checkout-btn">Checkout</a></div></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>Your Order</h2>
+            <button class="close-cart" id="closeCart">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-footer">
+            <div class="total">Total: $<span id="cartTotal">0.00</span></div>
+            <a href="checkout.html" class="checkout-btn magnetic" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+                Proceed to Checkout <span>&rarr;</span>
+            </a>
+        </div>
+    </div>
     <div class="cart-overlay" id="cartOverlay"></div>
 
     <main id="smooth-wrapper">
