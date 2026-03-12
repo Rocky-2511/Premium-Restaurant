@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>L'Or | Our Story</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="preloader" id="preloader"><h1 class="preloader-logo">Story</h1><div class="preloader-line"></div></div>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">L'Or</a>
+        <div class="nav-links">
+            <a href="menu.html" class="nav-link">Menu</a>
+            <a href="about.html" class="nav-link active">About</a>
+            <a href="gallery.html" class="nav-link">Gallery</a>
+            <a href="events.html" class="nav-link">Events</a>
+            <a href="order.html" class="nav-link">Order</a>
+            <a href="contact.html" class="nav-link">Contact</a>
+        </div>
+        <button class="cart-toggle" id="cartBtn">Cart (<span id="cartCount">0</span>)</button>
+    </nav>
+
+    <div class="cart-sidebar" id="cartSidebar"><div class="cart-header"><h2>Your Order</h2><button class="close-cart" id="closeCart">&times;</button></div><div class="cart-items" id="cartItems"></div><div class="cart-footer"><div class="total">Total: $<span id="cartTotal">0.00</span></div><a href="order.html" class="checkout-btn">Checkout</a></div></div>
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <main id="smooth-wrapper">
+        <div id="smooth-content">
+            <section class="hero" style="height: 60vh;">
+                <div class="hero-bg"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2000"><div class="overlay"></div></div>
+                <div class="hero-content">
+                    <h1 class="gsap-reveal">Our Heritage</h1>
+                </div>
+            </section>
+
+            <section class="section-pad container">
+                <div class="content-grid">
+                    <div class="text-block gsap-fade">
+                        <span class="subtitle">1998 - Present</span>
+                        <h2>A relentless pursuit of perfection.</h2>
+                        <p>What started as a small, intimate bistro in Paris has evolved into a globally recognized institution of fine dining. We spent decades refining our craft, traveling the world to understand how different cultures interact with food.</p>
+                        <p>Every dish we serve is the culmination of years of testing, failing, and ultimately achieving balance.</p>
+                    </div>
+                    <div class="img-block gsap-fade">
+                        <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?q=80&w=1000" alt="Kitchen Prep">
+                    </div>
+                </div>
+                
+                <div class="content-grid reverse" style="margin-top: 5rem;">
+                    <div class="text-block gsap-fade">
+                        <span class="subtitle">The Mastermind</span>
+                        <h2>Chef Antoine Laurent</h2>
+                        <p>Trained under the rigorous demands of classic French kitchens, Chef Antoine brings discipline and wild creativity to L'Or. Awarded 3 Michelin Stars, his vision is the beating heart of our restaurant.</p>
+                    </div>
+                    <div class="img-block gsap-fade">
+                        <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?q=80&w=1000" alt="Chef Portrait">
+                    </div>
+                </div>
+            </section>
+            <footer><p>&copy; 2026 L'Or Restaurant.</p></footer>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/lenis@1.1.9/dist/lenis.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Or | Michelin Star Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+    <button class="audio-toggle magnetic" id="audioToggle">
+        <span class="sound-bars"><span></span><span></span><span></span></span>
+        Sound <span id="soundState">Off</span>
+    </button>
+    <audio id="ambientAudio" src="https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3" loop></audio>
+
+    <div class="preloader" id="preloader">
+        <h1 class="preloader-logo">L'Or</h1>
+        <div class="preloader-line"></div>
+    </div>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo magnetic">L'Or</a>
+        <div class="nav-links">
+            <a href="menu.html" class="nav-link">Menu</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="gallery.html" class="nav-link">Gallery</a>
+            <a href="events.html" class="nav-link">Events</a>
+            <a href="order.html" class="nav-link">Order</a>
+            <a href="contact.html" class="nav-link">Contact</a>
+        </div>
+        <button class="cart-toggle magnetic" id="cartBtn">Cart (<span id="cartCount">0</span>)</button>
+    </nav>
+
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header"><h2>Your Order</h2><button class="close-cart" id="closeCart">&times;</button></div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-footer"><div class="total">Total: $<span id="cartTotal">0.00</span></div><a href="order.html" class="checkout-btn">Checkout</a></div>
+    </div>
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <main id="smooth-wrapper">
+        <div id="smooth-content">
+            <section class="hero">
+                <div class="hero-bg"><img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2000" alt="Luxury dining"><div class="overlay"></div></div>
+                <div class="hero-content">
+                    <h1 class="gsap-reveal">Taste the<br>Impossible</h1>
+                    <p class="gsap-reveal">A multi-sensory journey designed by Chef Antoine Laurent.</p>
+                    <div class="gsap-reveal"><a href="menu.html" class="btn-primary magnetic">View the Menu</a></div>
+                </div>
+            </section>
+
+            <div class="marquee-section">
+                <div class="marquee-content">
+                    <span>"Three Michelin Stars" — The Michelin Guide</span>
+                    <span class="dot">•</span>
+                    <span>"A Culinary Masterpiece" — Vogue Paris</span>
+                    <span class="dot">•</span>
+                    <span>"Restaurant of the Year 2026" — GQ</span>
+                    <span class="dot">•</span>
+                    <span>"Three Michelin Stars" — The Michelin Guide</span>
+                    <span class="dot">•</span>
+                    <span>"A Culinary Masterpiece" — Vogue Paris</span>
+                    <span class="dot">•</span>
+                    <span>"Restaurant of the Year 2026" — GQ</span>
+                </div>
+            </div>
+
+            <section class="section-pad container">
+                <div class="content-grid">
+                    <div class="text-block gsap-fade">
+                        <span class="subtitle">The Philosophy</span>
+                        <h2>Respect for the ingredient. Art on the plate.</h2>
+                        <p>At L'Or, we believe that dining is not merely about sustenance, but about emotion. We source exclusively from organic artisans and ethical fisheries, ensuring every element on your plate tells a story of the earth it came from.</p>
+                        <p>Our kitchen is a laboratory of taste, where traditional French techniques meet avant-garde innovation.</p>
+                        <a href="about.html" class="btn-primary magnetic" style="margin-top: 1rem;">Read Our Story</a>
+                    </div>
+                    <div class="img-block gsap-fade interactive-img">
+                        <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?q=80&w=1000" alt="Chef plating details">
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-pad container">
+                <div class="content-grid reverse">
+                    <div class="text-block gsap-fade">
+                        <span class="subtitle">The Atmosphere</span>
+                        <h2>Designed to stop time.</h2>
+                        <p>Step away from the noise of the city. Our dining room is an architectural marvel of dark oak, brushed gold, and intimate ambient lighting. Every table is a private stage for your culinary experience.</p>
+                        <a href="gallery.html" class="btn-primary magnetic" style="margin-top: 1rem;">View Gallery</a>
+                    </div>
+                    <div class="img-block gsap-fade interactive-img">
+                        <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?q=80&w=1000" alt="Restaurant Interior">
+                    </div>
+                </div>
+            </section>
+
+            <footer class="mega-footer">
+                <div class="container footer-grid">
+                    <div class="footer-brand">
+                        <h2 class="logo-large">L'Or</h2>
+                        <p>Elevating the standard of fine dining.</p>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Explore</h4>
+                        <a href="menu.html">The Menu</a>
+                        <a href="events.html">Private Events</a>
+                        <a href="reservation.html">Reservations</a>
+                    </div>
+                    <div class="footer-contact">
+                        <h4>Contact</h4>
+                        <p>124 Luxury Avenue, Fine Dining District</p>
+                        <p>reservations@lor-restaurant.com</p>
+                        <p>+1 (800) 123-4567</p>
+                    </div>
+                    <div class="footer-newsletter">
+                        <h4>The Inner Circle</h4>
+                        <p>Subscribe for exclusive event invitations.</p>
+                        <form class="newsletter-form">
+                            <input type="email" placeholder="Your Email Address" required>
+                            <button type="submit">→</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="footer-bottom container">
+                    <p>&copy; 2026 L'Or Restaurant. All Rights Reserved.</p>
+                    <div class="socials">
+                        <a href="#">Instagram</a>
+                        <a href="#">Twitter</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/lenis@1.1.9/dist/lenis.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
