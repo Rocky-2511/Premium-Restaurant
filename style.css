@@ -23,8 +23,8 @@ button { background: none; border: none; cursor: pointer; font-family: inherit; 
 
 /* --- PRELOADER --- */
 .preloader { position: fixed; inset: 0; background: var(--bg); z-index: 999999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease-in-out; }
-.preloader.hidden { opacity: 0; pointer-events: none; }
-.preloader-logo { font-family: var(--font-head); font-size: 3rem; color: var(--gold); letter-spacing: 5px; margin-bottom: 2rem; opacity: 0; animation: pulseLogo 2s infinite alternate; }
+/* Purani line ko isse replace kar do */
+.preloader { position: fixed; inset: 0; background: var(--bg); z-index: 999999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease-in-out; pointer-events: none; }.preloader-logo { font-family: var(--font-head); font-size: 3rem; color: var(--gold); letter-spacing: 5px; margin-bottom: 2rem; opacity: 0; animation: pulseLogo 2s infinite alternate; }
 .preloader-line { width: 0; height: 1px; background: var(--gold); animation: expandLine 1.5s cubic-bezier(0.77, 0, 0.175, 1) forwards; }
 @keyframes expandLine { to { width: 200px; } }
 @keyframes pulseLogo { to { opacity: 1; } }
