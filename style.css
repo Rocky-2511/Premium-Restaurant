@@ -21,13 +21,21 @@ a { text-decoration: none; color: inherit; }
 button { background: none; border: none; cursor: pointer; font-family: inherit; }
 .container { max-width: 1400px; margin: 0 auto; padding: 0 5%; }
 
-/* --- PRELOADER --- */
-.preloader { position: fixed; inset: 0; background: var(--bg); z-index: 999999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease-in-out; }
-/* Purani line ko isse replace kar do */
-.preloader { position: fixed; inset: 0; background: var(--bg); z-index: 999999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease-in-out; pointer-events: none; }.preloader-logo { font-family: var(--font-head); font-size: 3rem; color: var(--gold); letter-spacing: 5px; margin-bottom: 2rem; opacity: 0; animation: pulseLogo 2s infinite alternate; }
-.preloader-line { width: 0; height: 1px; background: var(--gold); animation: expandLine 1.5s cubic-bezier(0.77, 0, 0.175, 1) forwards; }
+/* --- THE MAGIC FIX: PRELOADER NEVER STUCKS --- */
+.preloader { 
+    position: fixed; inset: 0; background: var(--bg); z-index: 999999; 
+    display: flex; flex-direction: column; justify-content: center; align-items: center; 
+    /* Ye animation isko force kill karegi 1.5 sec baad */
+    animation: killPreloader 0.5s ease-out forwards;
+    animation-delay: 1.5s;
+}
+.preloader.hidden { opacity: 0; pointer-events: none; display: none; }
+@keyframes killPreloader {
+    100% { opacity: 0; pointer-events: none; visibility: hidden; z-index: -1; display: none; }
+}
+.preloader-logo { font-family: var(--font-head); font-size: 3rem; color: var(--gold); letter-spacing: 5px; margin-bottom: 2rem; }
+.preloader-line { width: 0; height: 1px; background: var(--gold); animation: expandLine 1.5s forwards; }
 @keyframes expandLine { to { width: 200px; } }
-@keyframes pulseLogo { to { opacity: 1; } }
 
 /* --- NAVBAR --- */
 .navbar { position: fixed; top: 0; width: 100%; padding: 1.5rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; background: rgba(3, 3, 3, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
@@ -38,10 +46,10 @@ button { background: none; border: none; cursor: pointer; font-family: inherit; 
 .cart-toggle { text-transform: uppercase; letter-spacing: 1px; color: var(--text); font-size: 0.85rem; transition: color 0.3s; }
 
 /* --- MENU CARDS --- */
-.section-pad { padding: 12rem 0 6rem; }
-.page-header { text-align: center; margin-bottom: 6rem; }
+.section-pad { padding: 10rem 0 6rem; }
+.page-header { text-align: center; margin-bottom: 5rem; }
 .subtitle { color: var(--gold); text-transform: uppercase; letter-spacing: 4px; font-size: 0.8rem; display: block; margin-bottom: 1rem; }
-.page-header h2 { font-size: clamp(3rem, 6vw, 5rem); }
+.page-header h2 { font-size: clamp(2.5rem, 5vw, 4rem); }
 .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 3rem; }
 .menu-card { background: var(--surface); border: 1px solid var(--surface-light); padding: 1.5rem; transition: transform 0.4s ease; display: flex; flex-direction: column;}
 .menu-card:hover { transform: translateY(-5px); border-color: rgba(212, 175, 55, 0.3); }
@@ -50,21 +58,20 @@ button { background: none; border: none; cursor: pointer; font-family: inherit; 
 .card-img:hover img { transform: scale(1.05); filter: brightness(1); }
 .view-3d-badge { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; color: var(--gold); font-family: var(--font-head); font-size: 1.5rem; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
 .card-img:hover .view-3d-badge { opacity: 1; }
-.card-content { flex: 1; display: flex; flex-direction: column; }
 .card-content h3 { font-size: 1.8rem; margin-bottom: 0.5rem; }
-.card-content p { color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; flex: 1; font-size: 0.95rem; }
+.card-content p { color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; font-size: 0.95rem; }
 .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--surface-light); padding-top: 1.5rem; }
 .price { color: var(--gold); font-family: var(--font-head); font-size: 1.5rem; }
 .add-to-cart { background: var(--surface-light); padding: 0.8rem 1.5rem; text-transform: uppercase; font-size: 0.8rem; transition: 0.3s; color: var(--text); border: 1px solid transparent; }
 .add-to-cart:hover { background: var(--bg); border-color: var(--gold); color: var(--gold); }
 
-/* --- CART --- */
+/* --- CART SIDEBAR --- */
 .cart-sidebar { position: fixed; top: 0; right: -450px; width: 100%; max-width: 450px; height: 100vh; background: var(--surface); z-index: 20000; padding: 2.5rem; display: flex; flex-direction: column; transition: right 0.4s ease; border-left: 1px solid var(--surface-light); }
 .cart-sidebar.open { right: 0; }
 .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 19999; opacity: 0; pointer-events: none; transition: 0.4s; }
 .cart-overlay.open { opacity: 1; pointer-events: all; }
 .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--surface-light); padding-bottom: 1.5rem; }
-.close-cart { font-size: 2.5rem; color: var(--text); line-height: 1; }
+.close-cart { font-size: 2.5rem; color: var(--text); }
 .cart-items { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; }
 .cart-item { display: flex; justify-content: space-between; align-items: center; background: var(--bg); padding: 1.5rem; border: 1px solid var(--surface-light); }
 .cart-footer { border-top: 1px solid var(--surface-light); padding-top: 2rem; margin-top: 2rem; }
@@ -72,19 +79,17 @@ button { background: none; border: none; cursor: pointer; font-family: inherit; 
 .checkout-btn { width: 100%; background: var(--text); color: var(--bg); padding: 1.2rem; text-align: center; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; display: block; }
 
 /* --- 3D / AR MODAL --- */
-.modal-3d { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 999999; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.modal-3d { position: fixed; inset: 0; background: rgba(3,3,3,1); z-index: 999999; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
 .modal-3d.open { opacity: 1; pointer-events: all; }
-.close-modal { position: absolute; top: 1.5rem; right: 2rem; font-size: 4rem; color: var(--gold); z-index: 9999999; background: rgba(0,0,0,0.5); border-radius: 50%; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; line-height: 0; }
+.close-modal { position: absolute; top: 1.5rem; right: 2rem; font-size: 3rem; color: var(--gold); z-index: 9999999; background: rgba(0,0,0,0.5); border-radius: 50%; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; line-height: 0; }
 .modal-info { position: absolute; top: 2rem; left: 50%; transform: translateX(-50%); z-index: 100; text-align: center; pointer-events: none; width: 90%; }
-.modal-info h3 { color: var(--gold); font-size: 2.5rem; margin-bottom: 5px; }
+.modal-info h3 { color: var(--gold); font-size: 2rem; margin-bottom: 5px; }
 .modal-info p { color: var(--text-muted); font-size: 0.9rem; }
 model-viewer { width: 100%; height: 100vh; background: transparent; outline: none; }
-.ar-launch-btn { background-color: var(--gold); color: black; padding: 1.2rem 2.5rem; font-family: var(--font-body); font-weight: bold; text-transform: uppercase; border-radius: 4px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); border: none; position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); white-space: nowrap; z-index: 99999; }
 
 /* --- MOBILE & HAMBURGER MENU --- */
 .hamburger { display: none; flex-direction: column; gap: 6px; z-index: 20000; padding: 10px; background: transparent; }
 .hamburger span { width: 30px; height: 2px; background: var(--gold); transition: 0.4s ease; }
-
 .close-mobile-menu { position: absolute; top: 2rem; right: 2rem; font-size: 4rem; color: var(--gold); background: transparent; border: none; z-index: 20001; }
 .mobile-menu { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(3, 3, 3, 0.98); backdrop-filter: blur(15px); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2.5rem; z-index: 15000; opacity: 0; pointer-events: none; transition: 0.4s; }
 .mobile-menu.open { opacity: 1; pointer-events: all; }
@@ -95,11 +100,6 @@ model-viewer { width: 100%; height: 100vh; background: transparent; outline: non
     .nav-links { display: none !important; } 
     .hamburger { display: flex !important; margin-left: auto; margin-right: 1.5rem; } 
     .navbar { padding: 1rem 5%; justify-content: space-between; }
-    
-    .page-header h2 { font-size: 2.5rem; }
     .grid-3 { grid-template-columns: 1fr; gap: 2rem; }
     .cart-sidebar { width: 100%; right: -100%; padding: 1.5rem; }
-    .close-modal { top: 1rem; right: 1rem; font-size: 3rem; width: 50px; height: 50px; }
-    .modal-info { top: 1.5rem; }
-    .modal-info h3 { font-size: 1.8rem; }
 }
