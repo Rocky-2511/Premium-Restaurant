@@ -1,217 +1,157 @@
-document.addEventListener("DOMContentLoaded", () => {
-    
-    // 1. LENIS SMOOTH SCROLLING (With dynamic height fix)
-    if (typeof Lenis !== 'undefined') {
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smooth: true
-        });
-        
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
+// --- 1. LENIS SMOOTH SCROLLING ---
+let lenis;
+if (typeof Lenis !== 'undefined') {
+    lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+}
 
-        // Force Lenis to recalculate when page dimensions change (prevents freezing)
-        new ResizeObserver(() => lenis.resize()).observe(document.body);
-
-        if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-            lenis.on('scroll', ScrollTrigger.update);
-            gsap.ticker.add((time) => { lenis.raf(time * 1000); });
-            gsap.ticker.lagSmoothing(0, 0);
-        }
-    }
-
-    // 2. PRELOADER & GSAP ANIMATIONS
+// --- 2. PRELOADER & GSAP ANIMATIONS ---
+document.addEventListener('DOMContentLoaded', () => {
     const preloader = document.getElementById('preloader');
-    if (preloader) {
-        window.addEventListener('load', () => {
-            setTimeout(() => { preloader.classList.add('hidden'); }, 500);
-        });
-    }
+    
+    window.addEventListener('load', () => {
+        if(preloader) {
+            setTimeout(() => { preloader.classList.add('hidden'); initPageAnimations(); }, 800);
+        } else { initPageAnimations(); }
+    });
 
-    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    function initPageAnimations() {
+        if (typeof gsap === 'undefined') return;
         gsap.registerPlugin(ScrollTrigger);
+
+        gsap.fromTo('.gsap-reveal', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 1.5, stagger: 0.2, ease: 'power4.out' });
+
         gsap.utils.toArray('.gsap-fade').forEach(element => {
-            gsap.fromTo(element, 
-                { y: 50, opacity: 0 },
-                { scrollTrigger: { trigger: element, start: 'top 85%' }, y: 0, opacity: 1, duration: 1.2, ease: 'power3.out' }
-            );
+            gsap.fromTo(element, { y: 50, opacity: 0 }, { scrollTrigger: { trigger: element, start: 'top 85%' }, y: 0, opacity: 1, duration: 1.2, ease: 'power3.out' });
         });
-    }
 
-    // 3. MOBILE MENU
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const closeMobileMenu = document.getElementById('closeMobileMenu');
-    
-    if (hamburgerBtn && mobileMenu) {
-        hamburgerBtn.addEventListener('click', () => {
-            mobileMenu.classList.add('open');
-            document.body.style.overflow = 'hidden'; 
+        gsap.utils.toArray('.img-block img').forEach(img => {
+            gsap.to(img, { yPercent: 20, ease: "none", scrollTrigger: { trigger: img.parentElement, start: "top bottom", end: "bottom top", scrub: true } });
         });
-    }
-    
-    if (closeMobileMenu && mobileMenu) {
-        closeMobileMenu.addEventListener('click', () => {
-            mobileMenu.classList.remove('open');
-            document.body.style.overflow = ''; 
-        });
-    }
 
-    // 4. GLOBAL CART SYSTEM
-    let cart = JSON.parse(localStorage.getItem('restaurantCart')) || [];
-    const cartSidebar = document.getElementById('cartSidebar');
-    const cartOverlay = document.getElementById('cartOverlay');
-    const cartItemsContainer = document.getElementById('cartItems');
-
-    function toggleCart(forceState) {
-        if (!cartSidebar || !cartOverlay) return;
-        const isOpen = cartSidebar.classList.contains('open');
-        const newState = forceState !== undefined ? forceState : !isOpen;
-        
-        if (newState) {
-            cartSidebar.classList.add('open');
-            cartOverlay.classList.add('open');
-            document.body.style.overflow = 'hidden'; 
-        } else {
-            cartSidebar.classList.remove('open');
-            cartOverlay.classList.remove('open');
-            document.body.style.overflow = '';
+        if(document.querySelector('.hero-bg')) {
+            gsap.to('.hero-bg', { yPercent: 30, ease: "none", scrollTrigger: { trigger: '.hero', start: "top top", end: "bottom top", scrub: true } });
         }
     }
 
-    document.getElementById('cartBtn')?.addEventListener('click', () => toggleCart(true));
-    document.getElementById('closeCart')?.addEventListener('click', () => toggleCart(false));
-    cartOverlay?.addEventListener('click', () => toggleCart(false));
+    // Navbar Hide/Show on Scroll
+    let lastScroll = 0;
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        if (currentScroll <= 0) navbar.classList.remove('hide');
+        else if (currentScroll > lastScroll && currentScroll > 100) navbar.classList.add('hide');
+        else navbar.classList.remove('hide');
+        lastScroll = currentScroll;
+    });
 
-    // Add to Cart Logic
-    document.querySelectorAll('.add-to-cart').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const id = e.target.getAttribute('data-id');
-            const name = e.target.getAttribute('data-name');
-            const price = parseFloat(e.target.getAttribute('data-price'));
+    // Mobile Menu Toggle
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    if(hamburger) {
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+    }
+    
+    // AR Modal Logic
+    initARViewer();
+});
+
+// --- 3. GLOBAL CART SYSTEM ---
+let cart = JSON.parse(localStorage.getItem('restaurantCart')) || [];
+const cartSidebar = document.getElementById('cartSidebar');
+const cartOverlay = document.getElementById('cartOverlay');
+
+function toggleCart() {
+    if(cartSidebar) cartSidebar.classList.toggle('open');
+    if(cartOverlay) cartOverlay.classList.toggle('open');
+}
+
+document.getElementById('cartBtn')?.addEventListener('click', toggleCart);
+document.getElementById('closeCart')?.addEventListener('click', toggleCart);
+cartOverlay?.addEventListener('click', toggleCart);
+
+document.querySelectorAll('.add-to-cart').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const id = e.target.dataset.id, name = e.target.dataset.name, price = parseFloat(e.target.dataset.price);
+        cart.push({ id, name, price });
+        localStorage.setItem('restaurantCart', JSON.stringify(cart));
+        updateCartDisplay();
+        if (typeof gsap !== 'undefined') gsap.fromTo(e.target, {scale: 0.9}, {scale: 1, duration: 0.3, ease: 'back.out(2)'});
+        toggleCart(); 
+    });
+});
+
+function updateCartDisplay() {
+    const container = document.getElementById('cartItems');
+    if(!container) return;
+    container.innerHTML = '';
+    let total = 0;
+    cart.forEach((item, index) => {
+        total += item.price;
+        container.innerHTML += `<div class="cart-item"><div><h4 style="margin-bottom:5px;">${item.name}</h4><span class="price">$${item.price.toFixed(2)}</span></div><button class="remove-btn" onclick="removeFromCart(${index})">Remove</button></div>`;
+    });
+    if(document.getElementById('cartCount')) document.getElementById('cartCount').innerText = cart.length;
+    if(document.getElementById('cartTotal')) document.getElementById('cartTotal').innerText = total.toFixed(2);
+}
+window.removeFromCart = function(index) { cart.splice(index, 1); localStorage.setItem('restaurantCart', JSON.stringify(cart)); updateCartDisplay(); }
+updateCartDisplay();
+
+// Form handler
+document.getElementById('bookingForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    document.getElementById('formStatus').innerText = "Request received. We will confirm shortly.";
+    e.target.reset();
+});
+
+// --- 4. GOOGLE MODEL VIEWER AR LOGIC ---
+function initARViewer() {
+    const arCards = document.querySelectorAll('.card-img[data-model]');
+    const modal = document.getElementById('arModal');
+    const modalContainer = document.getElementById('arContainer');
+    const closeBtn = document.getElementById('closeArModal');
+    
+    if(!modal || arCards.length === 0) return;
+
+    arCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const modelSrc = card.dataset.model;
+            const modelTitle = card.dataset.title || "3D Dish";
             
-            const existingItem = cart.find(item => item.id === id);
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({ id, name, price, quantity: 1 });
-            }
+            // Create the model-viewer element dynamically
+            modalContainer.innerHTML = `
+                <model-viewer 
+                    src="models/${modelSrc}.glb" 
+                    alt="${modelTitle}" 
+                    auto-rotate 
+                    camera-controls 
+                    ar 
+                    ar-modes="webxr scene-viewer quick-look" 
+                    shadow-intensity="1"
+                    environment-image="neutral"
+                    exposure="1.2">
+                    <button slot="ar-button" class="ar-button">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                        View on your table
+                    </button>
+                </model-viewer>
+                <div class="ar-instructions">
+                    <h3 style="color:var(--gold); font-size:2rem; margin-bottom:10px;">${modelTitle}</h3>
+                    <p>Drag to rotate. Scroll to zoom. <br>Tap "View on your table" on mobile for AR.</p>
+                </div>
+            `;
             
-            saveCart();
-            toggleCart(true); 
+            modal.classList.add('open');
+            if(lenis) lenis.stop(); // Stop scroll when modal is open
         });
     });
 
-    function updateCartDisplay() {
-        if (cartItemsContainer) {
-            cartItemsContainer.innerHTML = '';
-            let total = 0;
-            
-            if (cart.length === 0) {
-                cartItemsContainer.innerHTML = '<p style="text-align:center; color: var(--text-muted); padding: 2rem 0;">Your cart is empty.</p>';
-            } else {
-                cart.forEach((item, index) => {
-                    const itemTotal = item.price * item.quantity;
-                    total += itemTotal;
-                    
-                    const itemEl = document.createElement('div');
-                    itemEl.className = 'cart-item';
-                    itemEl.innerHTML = `
-                        <div style="color: white;">
-                            <h4 style="margin-bottom:5px; font-family: var(--font-head); font-size: 1.2rem;">${item.name}</h4>
-                            <span style="color: var(--text-muted); font-size: 0.9rem;">$${item.price.toFixed(2)} x ${item.quantity}</span>
-                        </div>
-                        <button class="remove-item" data-index="${index}" style="color:#ff4444; font-size: 1.5rem; border:none; background:none; cursor:pointer;">&times;</button>
-                    `;
-                    cartItemsContainer.appendChild(itemEl);
-                });
-            }
-            
-            const countEl = document.getElementById('cartCount');
-            const totalEl = document.getElementById('cartTotal');
-            if (countEl) countEl.innerText = cart.reduce((sum, item) => sum + item.quantity, 0);
-            if (totalEl) totalEl.innerText = total.toFixed(2);
-        }
-        updateCheckoutPage();
-    }
-
-    if (cartItemsContainer) {
-        cartItemsContainer.addEventListener('click', (e) => {
-            if (e.target.classList.contains('remove-item')) {
-                const index = e.target.getAttribute('data-index');
-                cart.splice(index, 1);
-                saveCart();
-            }
-        });
-    }
-
-    function saveCart() {
-        localStorage.setItem('restaurantCart', JSON.stringify(cart));
-        updateCartDisplay();
-    }
-
-    // 5. CHECKOUT PAGE CALCULATIONS
-    function updateCheckoutPage() {
-        const checkoutList = document.getElementById('checkoutItemsList');
-        const checkoutSubtotal = document.getElementById('checkoutSubtotal');
-        const checkoutTaxes = document.getElementById('checkoutTaxes');
-        const checkoutFinalTotal = document.getElementById('checkoutFinalTotal');
-
-        if (checkoutList && checkoutSubtotal && checkoutTaxes && checkoutFinalTotal) {
-            checkoutList.innerHTML = '';
-            let subtotal = 0;
-            
-            cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                subtotal += itemTotal;
-                const row = document.createElement('div');
-                row.className = 'summary-row';
-                row.innerHTML = `<span>${item.quantity}x ${item.name}</span><span>$${itemTotal.toFixed(2)}</span>`;
-                checkoutList.appendChild(row);
-            });
-            
-            const deliveryFee = 15.00;
-            const taxes = subtotal * 0.08; 
-            const finalTotal = cart.length > 0 ? (subtotal + deliveryFee + taxes) : 0;
-            
-            checkoutSubtotal.textContent = subtotal.toFixed(2);
-            checkoutTaxes.textContent = taxes.toFixed(2);
-            checkoutFinalTotal.textContent = finalTotal.toFixed(2);
-        }
-    }
-
-    updateCartDisplay();
-
-    // 6. 3D & AR VIEWER
-    const arViewer = document.getElementById('arViewer');
-    const modal3d = document.getElementById('modal3d');
-    const modalTitle = document.getElementById('modalTitle');
-    const closeModal = document.getElementById('closeModal');
-
-    if (arViewer && modal3d) {
-        document.querySelectorAll('.card-img[data-model]').forEach(img => {
-            img.addEventListener('click', () => {
-                const modelUrl = img.getAttribute('data-model');
-                const title = img.getAttribute('data-title');
-                
-                arViewer.src = modelUrl; 
-                if (modalTitle) modalTitle.innerText = title;
-                
-                modal3d.classList.add('open');
-                document.body.style.overflow = 'hidden'; 
-            });
-        });
-
-        if (closeModal) {
-            closeModal.addEventListener('click', () => {
-                modal3d.classList.remove('open');
-                document.body.style.overflow = '';
-                setTimeout(() => { arViewer.src = ""; }, 300); 
-            });
-        }
-    }
-});
+    closeBtn?.addEventListener('click', () => {
+        modal.classList.remove('open');
+        setTimeout(() => { modalContainer.innerHTML = ''; }, 400); // clear memory
+        if(lenis) lenis.start();
+    });
+}

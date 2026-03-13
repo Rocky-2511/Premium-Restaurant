@@ -2,84 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>L'Or | Contact Us</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Or | Contact</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=3">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="preloader" id="preloader"><h1 class="preloader-logo">Contact</h1><div class="preloader-line"></div></div>
 
     <nav class="navbar">
-        <a href="index.html" class="logo magnetic">L'Or</a>
-        
+        <a href="index.html" class="logo">L'Or</a>
         <div class="nav-links">
             <a href="menu.html" class="nav-link">Menu</a>
-            <a href="about.html" class="nav-link">About</a>
+            <a href="order.html" class="nav-link">Order</a> <a href="private-dining.html" class="nav-link">Private Dining</a>
             <a href="gallery.html" class="nav-link">Gallery</a>
             <a href="events.html" class="nav-link">Events</a>
-            <a href="order.html" class="nav-link">Order</a>
             <a href="contact.html" class="nav-link">Contact</a>
         </div>
-        
-        <button class="hamburger" id="hamburgerBtn">
-            <span></span><span></span>
-        </button>
-    
-        <button class="cart-toggle magnetic" id="cartBtn">Cart (<span id="cartCount">0</span>)</button>
+        <div class="nav-actions">
+            <a href="reservation.html" class="nav-reserve-btn">Reserve</a> 
+            <button class="cart-toggle" id="cartBtn">Cart (<span id="cartCount">0</span>)</button>
+            <div class="hamburger"><span></span><span></span><span></span></div>
+        </div>
     </nav>
-    <div class="mobile-menu" id="mobileMenu">
-        <button class="close-mobile-menu" id="closeMobileMenu">&times;</button>
-        
-        <a href="index.html">Home</a>
-        <a href="menu.html">Menu</a>
-        <a href="about.html">About</a>
-        <a href="gallery.html">Gallery</a>
-        <a href="events.html">Events</a>
-        <a href="order.html">Order</a>
-        <a href="contact.html">Contact</a>
-    </div>
-    <div class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header">
-            <h2>Your Order</h2>
-            <button class="close-cart" id="closeCart">&times;</button>
-        </div>
-        <div class="cart-items" id="cartItems"></div>
-        <div class="cart-footer">
-            <div class="total">Total: $<span id="cartTotal">0.00</span></div>
-            <a href="checkout.html" class="checkout-btn magnetic" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
-                Proceed to Checkout <span>&rarr;</span>
-            </a>
-        </div>
-    </div>
+
+    <div class="cart-sidebar" id="cartSidebar"><div class="cart-header"><h2>Your Order</h2><button class="close-cart" id="closeCart">&times;</button></div><div class="cart-items" id="cartItems"></div><div class="cart-footer"><div class="total">Total: $<span id="cartTotal">0.00</span></div><a href="checkout.html" class="checkout-btn">Checkout</a></div></div>
     <div class="cart-overlay" id="cartOverlay"></div>
 
     <main id="smooth-wrapper">
         <div id="smooth-content">
             <section class="section-pad container" style="padding-top: 15rem;">
-                <div class="content-grid">
+                <div class="content-grid" style="align-items: start;">
                     <div class="text-block gsap-fade">
-                        <span class="subtitle">Reach Out</span>
-                        <h2 style="font-size: 3.5rem;">We are at your service.</h2>
+                        <span class="subtitle">Location</span>
+                        <h2 style="font-size: 3.5rem;">Get in touch.</h2>
+                        <p style="color: var(--text-muted); margin-bottom: 2rem;">124 Luxury Avenue,<br>Fine Dining District, 90210</p>
                         
-                        <div style="margin-top: 3rem;">
-                            <h4 style="color: var(--gold); font-family: var(--font-body); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; font-size: 0.8rem;">Location</h4>
-                            <p style="color: var(--text-muted); margin-bottom: 2rem;">124 Luxury Avenue,<br>Fine Dining District, 90210</p>
-                            
-                            <h4 style="color: var(--gold); font-family: var(--font-body); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; font-size: 0.8rem;">Hours of Operation</h4>
-                            <p style="color: var(--text-muted); margin-bottom: 2rem;">Monday - Sunday<br>5:00 PM - 11:30 PM</p>
+                        <h4 style="color: var(--gold); margin-bottom: 1rem; font-family: var(--font-body); text-transform: uppercase; font-size: 0.9rem; letter-spacing: 2px;">Hours of Operation</h4>
+                        <p style="color: var(--text-muted); margin-bottom: 0.5rem;">Tue - Thu: 5:30 PM - 10:30 PM</p>
+                        <p style="color: var(--text-muted); margin-bottom: 0.5rem;">Fri - Sat: 5:00 PM - 11:30 PM</p>
+                        <p style="color: var(--text-muted); margin-bottom: 2rem;">Sun - Mon: Closed</p>
 
-                            <h4 style="color: var(--gold); font-family: var(--font-body); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; font-size: 0.8rem;">Concierge & Valet</h4>
-                            <p style="color: var(--text-muted);">+1 (800) 123-4567<br>Complimentary valet parking available at the main entrance.</p>
-                        </div>
+                        <h4 style="color: var(--gold); margin-bottom: 1rem; font-family: var(--font-body); text-transform: uppercase; font-size: 0.9rem; letter-spacing: 2px;">Direct Line</h4>
+                        <p style="color: var(--text-muted);">+1 (555) 019-2834<br>concierge@lor-restaurant.com</p>
                     </div>
-
-                    <div class="form-wrapper gsap-fade" style="width: 100%; padding: 3rem; background: transparent;">
+                    <div class="form-wrapper gsap-fade" style="width: 100%; padding: 3rem; background: var(--surface); border: 1px solid var(--surface-light);">
                         <form>
-                            <input type="text" placeholder="Your Name" style="margin-bottom: 1.5rem;" required>
-                            <input type="email" placeholder="Your Email" style="margin-bottom: 1.5rem;" required>
-                            <input type="text" placeholder="Subject" style="margin-bottom: 1.5rem;">
-                            <textarea placeholder="How can we assist you?" rows="6" style="margin-bottom: 1.5rem;" required></textarea>
+                            <input type="text" placeholder="Your Name" required>
+                            <input type="email" placeholder="Your Email" required>
+                            <input type="text" placeholder="Subject (e.g. Press, Event Inquiry)" required>
+                            <textarea placeholder="Message" rows="5" required></textarea>
                             <button type="submit" class="btn-primary" style="width: 100%;">Send Message</button>
                         </form>
                     </div>
@@ -92,6 +64,6 @@
     <script src="https://unpkg.com/lenis@1.1.9/dist/lenis.min.js"></script>
     <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-    <script src="script.js?v=3"></script>
+    <script src="script.js"></script>
 </body>
 </html>

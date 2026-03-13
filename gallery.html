@@ -2,75 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>L'Or | The Gallery</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=3">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Or | Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="preloader" id="preloader"><h1 class="preloader-logo">Gallery</h1><div class="preloader-line"></div></div>
 
     <nav class="navbar">
-        <a href="index.html" class="logo magnetic">L'Or</a>
-        
+        <a href="index.html" class="logo">L'Or</a>
         <div class="nav-links">
             <a href="menu.html" class="nav-link">Menu</a>
-            <a href="about.html" class="nav-link">About</a>
+            <a href="order.html" class="nav-link">Order</a> <a href="private-dining.html" class="nav-link">Private Dining</a>
             <a href="gallery.html" class="nav-link">Gallery</a>
             <a href="events.html" class="nav-link">Events</a>
-            <a href="order.html" class="nav-link">Order</a>
             <a href="contact.html" class="nav-link">Contact</a>
         </div>
-        
-        <button class="hamburger" id="hamburgerBtn">
-            <span></span><span></span>
-        </button>
-    
-        <button class="cart-toggle magnetic" id="cartBtn">Cart (<span id="cartCount">0</span>)</button>
+        <div class="nav-actions">
+            <a href="reservation.html" class="nav-reserve-btn">Reserve</a> 
+            <button class="cart-toggle" id="cartBtn">Cart (<span id="cartCount">0</span>)</button>
+            <div class="hamburger"><span></span><span></span><span></span></div>
+        </div>
     </nav>
-    <div class="mobile-menu" id="mobileMenu">
-        <button class="close-mobile-menu" id="closeMobileMenu">&times;</button>
-        
-        <a href="index.html">Home</a>
-        <a href="menu.html">Menu</a>
-        <a href="about.html">About</a>
-        <a href="gallery.html">Gallery</a>
-        <a href="events.html">Events</a>
-        <a href="order.html">Order</a>
-        <a href="contact.html">Contact</a>
-    </div>
 
-    <div class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header">
-            <h2>Your Order</h2>
-            <button class="close-cart" id="closeCart">&times;</button>
-        </div>
-        <div class="cart-items" id="cartItems"></div>
-        <div class="cart-footer">
-            <div class="total">Total: $<span id="cartTotal">0.00</span></div>
-            <a href="checkout.html" class="checkout-btn magnetic" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
-                Proceed to Checkout <span>&rarr;</span>
-            </a>
-        </div>
-    </div>
+    <div class="cart-sidebar" id="cartSidebar"><div class="cart-header"><h2>Your Order</h2><button class="close-cart" id="closeCart">&times;</button></div><div class="cart-items" id="cartItems"></div><div class="cart-footer"><div class="total">Total: $<span id="cartTotal">0.00</span></div><a href="checkout.html" class="checkout-btn">Checkout</a></div></div>
     <div class="cart-overlay" id="cartOverlay"></div>
 
     <main id="smooth-wrapper">
         <div id="smooth-content">
             <section class="section-pad container" style="padding-top: 15rem;">
-                <div class="page-header gsap-fade" style="margin-bottom: 4rem;">
-                    <span class="subtitle">Aesthetic</span>
-                    <h2>A Feast for the Eyes</h2>
-                    <p style="color: var(--text-muted); max-width: 600px; margin: 1.5rem auto 0; line-height: 1.8;">Explore the intricate details of our dining space, the precision of our kitchen, and the artistry of our plated masterpieces.</p>
-                </div>
-
+                <div class="page-header gsap-fade"><span class="subtitle">Aesthetic</span><h2>A Feast for the Eyes</h2></div>
                 <div class="grid-3">
-                    <div class="img-block gsap-fade" style="height: 450px;"><img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?q=80&w=800" alt="Interior Details"></div>
-                    <div class="img-block gsap-fade" style="height: 450px;"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=800" alt="Dining Experience"></div>
-                    <div class="img-block gsap-fade" style="height: 450px;"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=800" alt="Wine Cellar"></div>
-                    <div class="img-block gsap-fade" style="height: 450px;"><img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?q=80&w=800" alt="Plating Art"></div>
-                    <div class="img-block gsap-fade" style="height: 450px;"><img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=800" alt="Restaurant Front"></div>
-                    <div class="img-block gsap-fade" style="height: 450px;"><img src="https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=800" alt="Craft Cocktails"></div>
+                    <div class="img-block gsap-fade" style="height: 400px;"><img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?q=80&w=800"></div>
+                    <div class="img-block gsap-fade" style="height: 400px;"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=800"></div>
+                    <div class="img-block gsap-fade" style="height: 400px;"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=800"></div>
+                    <div class="img-block gsap-fade" style="height: 400px;"><img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=800"></div>
+                    <div class="img-block gsap-fade" style="height: 400px;"><img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?q=80&w=800"></div>
+                    <div class="img-block gsap-fade" style="height: 400px;"><img src="https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=800"></div>
                 </div>
             </section>
             <footer><p>&copy; 2026 L'Or Restaurant.</p></footer>
@@ -80,6 +49,6 @@
     <script src="https://unpkg.com/lenis@1.1.9/dist/lenis.min.js"></script>
     <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-    <script src="script.js?v=3"></script>
+    <script src="script.js"></script>
 </body>
 </html>

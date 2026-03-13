@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>L'Or | Tasting Menu</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=3">
-    
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
     <div class="preloader" id="preloader"><h1 class="preloader-logo">Menu</h1><div class="preloader-line"></div></div>
@@ -15,105 +14,102 @@
     <nav class="navbar">
         <a href="index.html" class="logo">L'Or</a>
         <div class="nav-links">
-            <a href="menu.html" class="nav-link active">Menu</a>
-            <a href="about.html" class="nav-link">About</a>
+            <a href="menu.html" class="nav-link">Menu</a>
+            <a href="order.html" class="nav-link">Order</a> <a href="private-dining.html" class="nav-link">Private Dining</a>
             <a href="gallery.html" class="nav-link">Gallery</a>
             <a href="events.html" class="nav-link">Events</a>
-            <a href="order.html" class="nav-link">Order</a>
             <a href="contact.html" class="nav-link">Contact</a>
         </div>
-        
-        <button class="hamburger" id="hamburgerBtn">
-            <span></span><span></span>
-        </button>
-        <button class="cart-toggle" id="cartBtn">Cart (<span id="cartCount">0</span>)</button>
+        <div class="nav-actions">
+            <a href="reservation.html" class="nav-reserve-btn">Reserve</a> 
+            <button class="cart-toggle" id="cartBtn">Cart (<span id="cartCount">0</span>)</button>
+            <div class="hamburger"><span></span><span></span><span></span></div>
+        </div>
     </nav>
 
-    <div class="mobile-menu" id="mobileMenu">
-        <button class="close-mobile-menu" id="closeMobileMenu">&times;</button>
-        <a href="index.html">Home</a>
-        <a href="menu.html">Menu</a>
-        <a href="about.html">About</a>
-        <a href="gallery.html">Gallery</a>
-        <a href="events.html">Events</a>
-        <a href="order.html">Order</a>
-        <a href="contact.html">Contact</a>
-    </div>
-
-    <div class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header">
-            <h2>Your Order</h2>
-            <button class="close-cart" id="closeCart">&times;</button>
-        </div>
-        <div class="cart-items" id="cartItems"></div>
-        <div class="cart-footer">
-            <div class="total">Total: $<span id="cartTotal">0.00</span></div>
-            <a href="checkout.html" class="checkout-btn">Proceed to Checkout &rarr;</a>
-        </div>
-    </div>
+    <div class="cart-sidebar" id="cartSidebar"><div class="cart-header"><h2>Your Order</h2><button class="close-cart" id="closeCart">&times;</button></div><div class="cart-items" id="cartItems"></div><div class="cart-footer"><div class="total">Total: $<span id="cartTotal">0.00</span></div><a href="checkout.html" class="checkout-btn">Checkout</a></div></div>
     <div class="cart-overlay" id="cartOverlay"></div>
 
-    <div class="modal-3d" id="modal3d">
-        <button class="close-modal" id="closeModal">&times;</button>
-        <div class="modal-info">
-            <h3 id="modalTitle">Loading...</h3>
-            <p>Drag to inspect. Tap the button below to view in your room.</p>
-        </div>
-        
-        <model-viewer 
-            id="arViewer"
-            src="" 
-            ar 
-            ar-modes="webxr scene-viewer quick-look" 
-            camera-controls 
-            auto-rotate
-            shadow-intensity="1"
-            style="width: 100%; height: 100vh; background: transparent; outline: none;">
-            
-            <button slot="ar-button" style="background: #D4AF37; color: black; padding: 15px 30px; font-weight: bold; text-transform: uppercase; border-radius: 5px; border: none; position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); z-index: 100000; box-shadow: 0px 4px 15px rgba(0,0,0,0.5);">
-                View in Real Space (AR)
-            </button>
-        </model-viewer>
+    <div class="modal-ar" id="arModal">
+        <button class="close-modal" id="closeArModal">&times;</button>
+        <div id="arContainer" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
     </div>
 
     <main id="smooth-wrapper">
         <div id="smooth-content">
             <section class="section-pad container">
                 <div class="page-header gsap-fade">
-                    <span class="subtitle">Winter Collection</span>
+                    <span class="subtitle">The Collection</span>
                     <h2>Interactive Menu</h2>
+                    <p style="color:var(--text-muted); margin-top: 1rem;">Tap the AR icon on any image to view the dish in 3D on your real table.</p>
                 </div>
 
                 <div class="grid-3">
                     <div class="menu-card gsap-fade">
-                        <div class="card-img" data-model="https://modelviewer.dev/shared-assets/models/Astronaut.glb" data-title="Truffle Pizza">
+                        <div class="card-img" data-model="pizza" data-title="Truffle Pizza">
                             <img src="https://images.unsplash.com/photo-1556040220-4096d522378d?q=80&w=800">
-                            <div class="view-3d-badge">View in 3D & AR</div>
+                            <div class="view-ar-badge">
+                                <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                                View in AR
+                            </div>
                         </div>
                         <div class="card-content">
                             <h3>Truffle Pizza</h3><p>Wood-fired artisanal crust, black truffle paste, 24k gold flakes.</p>
-                            <div class="card-footer"><span class="price">$120</span><button class="add-to-cart" data-id="1" data-name="Truffle Pizza" data-price="120">Add to Cart</button></div>
+                            <div class="card-footer"><span class="price">$120</span><button class="add-to-cart" data-id="1" data-name="Truffle Pizza" data-price="120">Add</button></div>
+                        </div>
+                    </div>
+                    
+                    <div class="menu-card gsap-fade">
+                        <div class="card-img" data-model="burger" data-title="Wagyu Burger">
+                            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=800">
+                            <div class="view-ar-badge">
+                                <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                                View in AR
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Wagyu Burger</h3><p>Premium grade A5 beef, aged cheddar, caviar aioli.</p>
+                            <div class="card-footer"><span class="price">$85</span><button class="add-to-cart" data-id="2" data-name="Wagyu Burger" data-price="85">Add</button></div>
                         </div>
                     </div>
 
                     <div class="menu-card gsap-fade">
-                        <div class="card-img" data-model="https://modelviewer.dev/shared-assets/models/Astronaut.glb" data-title="Wagyu Burger">
-                            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=800">
-                            <div class="view-3d-badge">View in 3D & AR</div>
+                        <div class="card-img" data-model="sushi" data-title="Signature Omakase">
+                            <img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=800">
+                            <div class="view-ar-badge">
+                                <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                                View in AR
+                            </div>
                         </div>
                         <div class="card-content">
-                            <h3>Wagyu Burger</h3><p>Premium grade A5 beef, aged cheddar, caviar aioli.</p>
-                            <div class="card-footer"><span class="price">$85</span><button class="add-to-cart" data-id="2" data-name="Wagyu Burger" data-price="85">Add to Cart</button></div>
+                            <h3>Signature Omakase</h3><p>Chef's daily selection of the finest bluefin tuna.</p>
+                            <div class="card-footer"><span class="price">$250</span><button class="add-to-cart" data-id="3" data-name="Signature Omakase" data-price="250">Add</button></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page-header gsap-fade" style="margin-top: 8rem; margin-bottom: 4rem;">
+                    <h2>Desserts</h2>
+                </div>
+                <div class="grid-3">
+                    <div class="menu-card gsap-fade">
+                        <div class="card-img">
+                            <img src="https://images.unsplash.com/photo-1574514334057-79b88e1e7798?q=80&w=800">
+                        </div>
+                        <div class="card-content">
+                            <h3>Gold Leaf Lava Cake</h3><p>Valrhona chocolate, Madagascar vanilla bean ice cream.</p>
+                            <div class="card-footer"><span class="price">$45</span><button class="add-to-cart" data-id="4" data-name="Lava Cake" data-price="45">Add</button></div>
                         </div>
                     </div>
                 </div>
             </section>
+            <footer><p>&copy; 2026 L'Or Restaurant.</p></footer>
         </div>
     </main>
 
     <script src="https://unpkg.com/lenis@1.1.9/dist/lenis.min.js"></script>
     <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-    <script src="script.js?v=3"></script>
+    <script src="script.js"></script>
 </body>
 </html>

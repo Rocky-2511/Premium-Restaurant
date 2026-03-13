@@ -2,83 +2,66 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>L'Or | Secure Checkout</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=3">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Or | Checkout</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="preloader" id="preloader"><h1 class="preloader-logo">Checkout</h1><div class="preloader-line"></div></div>
+
     <nav class="navbar">
         <a href="index.html" class="logo">L'Or</a>
         <div class="nav-links">
             <a href="menu.html" class="nav-link">Menu</a>
-            <a href="order.html" class="nav-link">Back to Order</a>
+            <a href="order.html" class="nav-link">Order</a> <a href="private-dining.html" class="nav-link">Private Dining</a>
+            <a href="gallery.html" class="nav-link">Gallery</a>
+            <a href="events.html" class="nav-link">Events</a>
+            <a href="contact.html" class="nav-link">Contact</a>
+        </div>
+        <div class="nav-actions">
+            <a href="reservation.html" class="nav-reserve-btn">Reserve</a> 
+            <button class="cart-toggle" id="cartBtn">Cart (<span id="cartCount">0</span>)</button>
+            <div class="hamburger"><span></span><span></span><span></span></div>
         </div>
     </nav>
 
+    <div class="cart-sidebar" id="cartSidebar"><div class="cart-header"><h2>Your Order</h2><button class="close-cart" id="closeCart">&times;</button></div><div class="cart-items" id="cartItems"></div><div class="cart-footer"><div class="total">Total: $<span id="cartTotal">0.00</span></div><a href="checkout.html" class="checkout-btn">Checkout</a></div></div>
+    <div class="cart-overlay" id="cartOverlay"></div>
+
     <main id="smooth-wrapper">
         <div id="smooth-content">
-            <section class="section-pad container" style="padding-top: 10rem;">
-                <div class="page-header gsap-fade" style="margin-bottom: 4rem; text-align: left;">
-                    <span class="subtitle">Final Step</span>
-                    <h2>Secure Checkout</h2>
-                </div>
-
-                <div class="checkout-grid">
-                    <div class="checkout-form gsap-fade">
-                        <form id="placeOrderForm">
-                            <h3 class="form-section-title">Contact Information</h3>
-                            <div class="input-group">
-                                <input type="email" placeholder="Email Address" required>
-                                <input type="tel" placeholder="Phone Number" required>
-                            </div>
-
-                            <h3 class="form-section-title">Delivery Details</h3>
-                            <div class="input-group">
-                                <input type="text" placeholder="First Name" required>
-                                <input type="text" placeholder="Last Name" required>
-                            </div>
-                            <input type="text" placeholder="Street Address" style="margin-bottom: 1.5rem;" required>
-                            <div class="input-group">
+            <section class="section-pad container" style="padding-top: 15rem;">
+                <div class="page-header gsap-fade"><span class="subtitle">Secure Payment</span><h2>Finalize Order</h2></div>
+                
+                <div class="content-grid" style="align-items: start;">
+                    <div class="form-wrapper gsap-fade" style="width: 100%; padding: 3rem; background: var(--surface); border: 1px solid var(--surface-light);">
+                        <h3 style="font-size: 2rem; margin-bottom: 2rem; color: var(--gold);">Billing Details</h3>
+                        <form id="checkoutForm">
+                            <input type="text" placeholder="Full Name" required>
+                            <input type="email" placeholder="Email Address" required>
+                            <input type="text" placeholder="Shipping Address" required>
+                            <div style="display:flex; gap:1rem;">
                                 <input type="text" placeholder="City" required>
-                                <input type="text" placeholder="ZIP / Postal Code" required>
+                                <input type="text" placeholder="Zip Code" required>
                             </div>
-
-                            <h3 class="form-section-title">Payment Method</h3>
-                            <div class="payment-box">
-                                <input type="text" placeholder="Card Number (xxxx xxxx xxxx xxxx)" required style="margin-bottom: 1rem;">
-                                <div class="input-group">
-                                    <input type="text" placeholder="MM/YY" required>
-                                    <input type="text" placeholder="CVC" required>
-                                </div>
+                            <h3 style="font-size: 2rem; margin: 2rem 0; color: var(--gold);">Card Information</h3>
+                            <input type="text" placeholder="Card Number (0000 0000 0000 0000)" required>
+                            <div style="display:flex; gap:1rem;">
+                                <input type="text" placeholder="MM/YY" required>
+                                <input type="text" placeholder="CVV" required>
                             </div>
-
-                            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 2rem;">Place Order</button>
+                            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">Pay Securely</button>
                         </form>
                     </div>
-
-                    <div class="checkout-summary gsap-fade">
-                        <h3 style="margin-bottom: 2rem; font-size: 1.8rem;">Order Summary</h3>
-                        <div id="checkoutItemsList" class="checkout-items-list">
+                    
+                    <div class="order-summary gsap-fade" style="background: var(--surface); padding: 3rem; border: 1px solid var(--surface-light);">
+                        <h3 style="font-size: 2rem; margin-bottom: 2rem; color: var(--gold);">Order Summary</h3>
+                        <div id="checkoutItems" style="margin-bottom: 2rem;">
                             </div>
-                        
-                        <div class="summary-totals">
-                            <div class="summary-row">
-                                <span>Subtotal</span>
-                                <span>$<span id="checkoutSubtotal">0.00</span></span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Delivery Fee</span>
-                                <span>$15.00</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Taxes (8%)</span>
-                                <span>$<span id="checkoutTaxes">0.00</span></span>
-                            </div>
-                            <div class="summary-row total-row">
-                                <span>Total</span>
-                                <span>$<span id="checkoutFinalTotal">0.00</span></span>
-                            </div>
+                        <div style="border-top: 1px solid var(--surface-light); padding-top: 1.5rem; display: flex; justify-content: space-between; font-size: 1.5rem; font-family: var(--font-head);">
+                            <span>Total</span>
+                            <span style="color: var(--gold);" id="checkoutTotal">$0.00</span>
                         </div>
                     </div>
                 </div>
@@ -90,6 +73,32 @@
     <script src="https://unpkg.com/lenis@1.1.9/dist/lenis.min.js"></script>
     <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-    <script src="script.js?v=3"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkoutItems = document.getElementById('checkoutItems');
+            const checkoutTotal = document.getElementById('checkoutTotal');
+            let cartData = JSON.parse(localStorage.getItem('restaurantCart')) || [];
+            let sum = 0;
+            
+            if(cartData.length === 0) {
+                checkoutItems.innerHTML = '<p style="color:var(--text-muted)">Your cart is empty.</p>';
+            } else {
+                cartData.forEach(item => {
+                    sum += item.price;
+                    checkoutItems.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom: 1rem;"><span>${item.name}</span><span>$${item.price.toFixed(2)}</span></div>`;
+                });
+                checkoutTotal.innerText = `$${sum.toFixed(2)}`;
+            }
+
+            document.getElementById('checkoutForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Payment Processing Integration goes here! (e.g. Stripe/Razorpay)');
+                localStorage.removeItem('restaurantCart');
+                window.location.href = "index.html";
+            });
+        });
+    </script>
 </body>
 </html>
