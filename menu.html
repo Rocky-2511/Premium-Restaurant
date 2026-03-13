@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>L'Or | Tasting Menu</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -47,30 +47,31 @@
         <div class="cart-items" id="cartItems"></div>
         <div class="cart-footer">
             <div class="total">Total: $<span id="cartTotal">0.00</span></div>
-            <a href="checkout.html" class="checkout-btn magnetic" style="display: flex; justify-content: center; align-items: center; gap: 10px;">Proceed to Checkout &rarr;</a>
+            <a href="checkout.html" class="checkout-btn magnetic">Proceed to Checkout &rarr;</a>
         </div>
     </div>
     <div class="cart-overlay" id="cartOverlay"></div>
 
     <div class="modal-3d" id="modal3d">
         <button class="close-modal" id="closeModal">&times;</button>
-        <div class="modal-info" style="position: absolute; top: 30px; left: 50%; transform: translateX(-50%); z-index: 10; text-align: center; width: 100%;">
-            <h3 id="modalTitle" style="color: var(--gold); font-size: 2.5rem; margin-bottom: 5px;">Loading...</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Drag to inspect in 3D. <span class="mobile-ar-text">Use the button below for AR.</span></p>
+        <div class="modal-info">
+            <h3 id="modalTitle">Loading...</h3>
+            <p>Drag to inspect. Use the button below to view on your table.</p>
         </div>
         
         <model-viewer 
             id="arViewer"
             src="" 
+            ios-src=""
             ar 
+            ar-scale="auto"
             ar-modes="webxr scene-viewer quick-look" 
             camera-controls 
             auto-rotate
-            shadow-intensity="1"
-            style="width: 100%; height: 100vh; background: transparent; outline: none;">
+            shadow-intensity="1">
             
-            <button slot="ar-button" class="btn-primary" style="position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); z-index: 10; white-space: nowrap; padding: 1rem 2rem; background: var(--bg);">
-                View in Real Space (AR)
+            <button slot="ar-button" class="ar-launch-btn">
+                Launch AR (Real Space)
             </button>
         </model-viewer>
     </div>
@@ -81,29 +82,40 @@
                 <div class="page-header gsap-fade">
                     <span class="subtitle">Winter Collection</span>
                     <h2>Interactive Menu</h2>
-                    <p style="color: var(--text-muted); margin-top: 1rem; max-width: 600px; margin-inline: auto;">Click on the signature items below to inspect them in full high-fidelity 3D before ordering.</p>
+                    <p style="color: var(--text-muted); margin-top: 1rem; max-width: 600px; margin-inline: auto;">Click on the signature items below to inspect them in full high-fidelity 3D and AR before ordering.</p>
                 </div>
 
                 <div class="grid-3">
                     <div class="menu-card gsap-fade">
-                        <div class="card-img" data-model="pizza"><img src="https://images.unsplash.com/photo-1556040220-4096d522378d?q=80&w=800"><div class="view-3d-badge">View in 3D & AR</div></div>
+                        <div class="card-img" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF-Binary/Avocado.glb" data-title="Truffle Pizza">
+                            <img src="https://images.unsplash.com/photo-1556040220-4096d522378d?q=80&w=800">
+                            <div class="view-3d-badge">View in 3D & AR</div>
+                        </div>
                         <div class="card-content">
                             <h3>Truffle Pizza</h3><p>Wood-fired artisanal crust, black truffle paste, 24k gold flakes.</p>
-                            <div class="card-footer"><span class="price">$120</span><button class="add-to-cart magnetic" data-id="1" data-name="Truffle Pizza" data-price="120">Add</button></div>
+                            <div class="card-footer"><span class="price">$120</span><button class="add-to-cart magnetic" data-id="1" data-name="Truffle Pizza" data-price="120">Add to Cart</button></div>
                         </div>
                     </div>
+
                     <div class="menu-card gsap-fade">
-                        <div class="card-img" data-model="burger"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=800"><div class="view-3d-badge">View in 3D & AR</div></div>
+                        <div class="card-img" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF-Binary/Avocado.glb" data-title="Wagyu Burger">
+                            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=800">
+                            <div class="view-3d-badge">View in 3D & AR</div>
+                        </div>
                         <div class="card-content">
                             <h3>Wagyu Burger</h3><p>Premium grade A5 beef, aged cheddar, caviar aioli.</p>
-                            <div class="card-footer"><span class="price">$85</span><button class="add-to-cart magnetic" data-id="2" data-name="Wagyu Burger" data-price="85">Add</button></div>
+                            <div class="card-footer"><span class="price">$85</span><button class="add-to-cart magnetic" data-id="2" data-name="Wagyu Burger" data-price="85">Add to Cart</button></div>
                         </div>
                     </div>
+
                     <div class="menu-card gsap-fade">
-                        <div class="card-img" data-model="sushi"><img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=800"><div class="view-3d-badge">View in 3D & AR</div></div>
+                        <div class="card-img" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF-Binary/Avocado.glb" data-title="Signature Sushi">
+                            <img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=800">
+                            <div class="view-3d-badge">View in 3D & AR</div>
+                        </div>
                         <div class="card-content">
                             <h3>Signature Omakase</h3><p>Chef's daily selection of the finest bluefin tuna.</p>
-                            <div class="card-footer"><span class="price">$250</span><button class="add-to-cart magnetic" data-id="3" data-name="Signature Omakase" data-price="250">Add</button></div>
+                            <div class="card-footer"><span class="price">$250</span><button class="add-to-cart magnetic" data-id="3" data-name="Signature Omakase" data-price="250">Add to Cart</button></div>
                         </div>
                     </div>
                 </div>
