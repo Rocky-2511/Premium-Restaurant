@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     
-    // ==========================================
-    // 1. LENIS SMOOTH SCROLLING & GSAP SYNC
-    // ==========================================
+    // 1. LENIS SMOOTH SCROLLING (With dynamic height fix)
     if (typeof Lenis !== 'undefined') {
         const lenis = new Lenis({
             duration: 1.2,
@@ -16,7 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         requestAnimationFrame(raf);
 
-        // Sync GSAP with Lenis for butter-smooth scroll triggers
+        // Force Lenis to recalculate when page dimensions change (prevents freezing)
+        new ResizeObserver(() => lenis.resize()).observe(document.body);
+
         if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
             lenis.on('scroll', ScrollTrigger.update);
             gsap.ticker.add((time) => { lenis.raf(time * 1000); });
@@ -24,9 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ==========================================
     // 2. PRELOADER & GSAP ANIMATIONS
-    // ==========================================
     const preloader = document.getElementById('preloader');
     if (preloader) {
         window.addEventListener('load', () => {
@@ -36,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
         gsap.registerPlugin(ScrollTrigger);
-        
         gsap.utils.toArray('.gsap-fade').forEach(element => {
             gsap.fromTo(element, 
                 { y: 50, opacity: 0 },
@@ -45,9 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ==========================================
     // 3. MOBILE MENU
-    // ==========================================
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     const closeMobileMenu = document.getElementById('closeMobileMenu');
@@ -66,9 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ==========================================
     // 4. GLOBAL CART SYSTEM
-    // ==========================================
     let cart = JSON.parse(localStorage.getItem('restaurantCart')) || [];
     const cartSidebar = document.getElementById('cartSidebar');
     const cartOverlay = document.getElementById('cartOverlay');
@@ -82,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (newState) {
             cartSidebar.classList.add('open');
             cartOverlay.classList.add('open');
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling on mobile
+            document.body.style.overflow = 'hidden'; 
         } else {
             cartSidebar.classList.remove('open');
             cartOverlay.classList.remove('open');
@@ -90,7 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Cart Event Listeners
     document.getElementById('cartBtn')?.addEventListener('click', () => toggleCart(true));
     document.getElementById('closeCart')?.addEventListener('click', () => toggleCart(false));
     cartOverlay?.addEventListener('click', () => toggleCart(false));
@@ -102,13 +94,18 @@ document.addEventListener("DOMContentLoaded", () => {
             const name = e.target.getAttribute('data-name');
             const price = parseFloat(e.target.getAttribute('data-price'));
             
-            cart.push({ id, name, price });
+            const existingItem = cart.find(item => item.id === id);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ id, name, price, quantity: 1 });
+            }
+            
             saveCart();
             toggleCart(true); 
         });
     });
 
-    // Update Display & Checkout Logic
     function updateCartDisplay() {
         if (cartItemsContainer) {
             cartItemsContainer.innerHTML = '';
@@ -118,13 +115,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 cartItemsContainer.innerHTML = '<p style="text-align:center; color: var(--text-muted); padding: 2rem 0;">Your cart is empty.</p>';
             } else {
                 cart.forEach((item, index) => {
-                    total += item.price;
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    
                     const itemEl = document.createElement('div');
                     itemEl.className = 'cart-item';
                     itemEl.innerHTML = `
                         <div style="color: white;">
                             <h4 style="margin-bottom:5px; font-family: var(--font-head); font-size: 1.2rem;">${item.name}</h4>
-                            <span style="color:#D4AF37;">$${item.price.toFixed(2)}</span>
+                            <span style="color: var(--text-muted); font-size: 0.9rem;">$${item.price.toFixed(2)} x ${item.quantity}</span>
                         </div>
                         <button class="remove-item" data-index="${index}" style="color:#ff4444; font-size: 1.5rem; border:none; background:none; cursor:pointer;">&times;</button>
                     `;
@@ -134,14 +133,12 @@ document.addEventListener("DOMContentLoaded", () => {
             
             const countEl = document.getElementById('cartCount');
             const totalEl = document.getElementById('cartTotal');
-            if (countEl) countEl.innerText = cart.length;
+            if (countEl) countEl.innerText = cart.reduce((sum, item) => sum + item.quantity, 0);
             if (totalEl) totalEl.innerText = total.toFixed(2);
         }
-        
         updateCheckoutPage();
     }
 
-    // Event Delegation for Remove Buttons (Better Performance)
     if (cartItemsContainer) {
         cartItemsContainer.addEventListener('click', (e) => {
             if (e.target.classList.contains('remove-item')) {
@@ -157,9 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateCartDisplay();
     }
 
-    // ==========================================
     // 5. CHECKOUT PAGE CALCULATIONS
-    // ==========================================
     function updateCheckoutPage() {
         const checkoutList = document.getElementById('checkoutItemsList');
         const checkoutSubtotal = document.getElementById('checkoutSubtotal');
@@ -171,15 +166,16 @@ document.addEventListener("DOMContentLoaded", () => {
             let subtotal = 0;
             
             cart.forEach(item => {
-                subtotal += item.price;
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
                 const row = document.createElement('div');
                 row.className = 'summary-row';
-                row.innerHTML = `<span>1x ${item.name}</span><span>$${item.price.toFixed(2)}</span>`;
+                row.innerHTML = `<span>${item.quantity}x ${item.name}</span><span>$${itemTotal.toFixed(2)}</span>`;
                 checkoutList.appendChild(row);
             });
             
             const deliveryFee = 15.00;
-            const taxes = subtotal * 0.08; // 8% tax example
+            const taxes = subtotal * 0.08; 
             const finalTotal = cart.length > 0 ? (subtotal + deliveryFee + taxes) : 0;
             
             checkoutSubtotal.textContent = subtotal.toFixed(2);
@@ -188,12 +184,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Initial Render
     updateCartDisplay();
 
-    // ==========================================
     // 6. 3D & AR VIEWER
-    // ==========================================
     const arViewer = document.getElementById('arViewer');
     const modal3d = document.getElementById('modal3d');
     const modalTitle = document.getElementById('modalTitle');
@@ -217,7 +210,6 @@ document.addEventListener("DOMContentLoaded", () => {
             closeModal.addEventListener('click', () => {
                 modal3d.classList.remove('open');
                 document.body.style.overflow = '';
-                // Delay clearing src so the close animation is smooth
                 setTimeout(() => { arViewer.src = ""; }, 300); 
             });
         }

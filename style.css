@@ -18,18 +18,18 @@ html.lenis, html.lenis body { height: auto; }
 body { background-color: var(--bg); color: var(--text); font-family: var(--font-body); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 400; }
 a { text-decoration: none; color: inherit; }
-button { background: none; border: none; cursor: pointer; font-family: inherit; }
+button { background: none; border: none; cursor: pointer; font-family: inherit; outline: none; }
 .container { max-width: 1400px; margin: 0 auto; padding: 0 5%; }
 
-/* --- THE MAGIC FIX: PRELOADER NEVER STUCKS --- */
+/* --- PRELOADER --- */
 .preloader { 
     position: fixed; inset: 0; background: var(--bg); z-index: 999999; 
     display: flex; flex-direction: column; justify-content: center; align-items: center; 
-    /* Ye animation isko force kill karegi 1.5 sec baad */
     animation: killPreloader 0.5s ease-out forwards;
     animation-delay: 1.5s;
+    pointer-events: all;
 }
-.preloader.hidden { opacity: 0; pointer-events: none; display: none; }
+.preloader.hidden { opacity: 0; pointer-events: none; visibility: hidden; z-index: -1; display: none; }
 @keyframes killPreloader {
     100% { opacity: 0; pointer-events: none; visibility: hidden; z-index: -1; display: none; }
 }
